@@ -1,0 +1,28 @@
+version: 2.1
+jobs:
+  build:
+    machine:
+      image: ubuntu-2004:202111-02
+    resource_class: large
+    steps:
+      - checkout
+      - run:
+          name: "Setup"
+          command: |
+            sudo bash setup
+      - run:
+          name: "Download ccache"
+          command: |
+            bash download_ccache
+      - run:
+          name: "Sync"
+          command: |
+            bash sync
+      - run:
+          name: "Build"
+          command: |
+            bash build
+      - run:
+          name: "Upload ccache"
+          command: |
+            bash upload_ccache
