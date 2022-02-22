@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Setup zram
+apt update
+apt install kmod mount
+
+modprobe zram num_devices=8
+SIZE=1536
+echo $(($SIZE*1024*1024)) > /sys/block/zram0/disksize
+echo $(($SIZE*1024*1024)) > /sys/block/zram1/disksize
+echo $(($SIZE*1024*1024)) > /sys/block/zram2/disksize
+echo $(($SIZE*1024*1024)) > /sys/block/zram3/disksize
+echo $(($SIZE*1024*1024)) > /sys/block/zram4/disksize
+echo $(($SIZE*1024*1024)) > /sys/block/zram5/disksize
+echo $(($SIZE*1024*1024)) > /sys/block/zram6/disksize
+echo $(($SIZE*1024*1024)) > /sys/block/zram7/disksize
+
+mkswap /dev/zram0
+mkswap /dev/zram1
+mkswap /dev/zram2
+mkswap /dev/zram3
+mkswap /dev/zram4
+mkswap /dev/zram5
+mkswap /dev/zram6
+mkswap /dev/zram7
+
+swapon /dev/zram0 -p 10
+swapon /dev/zram1 -p 10
+swapon /dev/zram2 -p 10
+swapon /dev/zram3 -p 10
+swapon /dev/zram4 -p 10
+swapon /dev/zram5 -p 10
+swapon /dev/zram6 -p 10
+swapon /dev/zram7 -p 10
+
+# https://github.com/Sushrut1101/Docker/blob/master/Dockerfile
+rm -f \
+    /etc/profile \
+    ~/.profile \
+    ~/.bashrc
+
+cp -R ./proprietary/* /
+
+apt install apt-utils sudo -y
+
+apt install git ssh -y
+
+apt install \
+    curl wget aria2 tmate python2 python3 silversearch* \
+    iputils-ping iproute2 \
+    nano rsync rclone tmux screen openssh-server \
+    python3-pip adb fastboot jq npm neofetch mlocate \
+    zip unzip tar ccache \
+    cpio lzma \
+    -y
+
+apt install \
+    erofs-utils \
+    -y
+
+pip install \
+    twrpdtgen
+
+apt install \
+        schedtool openjdk-8-jdk \
+    -y
+
+git clone https://github.com/akhilnarang/scripts.git /tmp/scripts \
+&& bash /tmp/scripts/setup/android_build_env.sh \
+&& rm -rf /tmp/scripts
+
+ln -sf /usr/bin/python2 /usr/bin/python
