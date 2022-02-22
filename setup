@@ -2,7 +2,7 @@
 
 # Setup zram
 apt update
-apt install kmod mount
+apt install kmod mount linux-modules-extra-5.4.0-1021-gcp
 
 modprobe zram num_devices=8
 SIZE=1536
